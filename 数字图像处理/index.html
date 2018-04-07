@@ -10,42 +10,63 @@
     body {
       height: 100%;
     }
+
     body {
       margin: 0;
-      color: #555;
+      color: #999;
       font-size: 14px;
       line-height: 1.42857143;
-      background: rgba(3,169,244,.8);
+      background: #75ADFF;
     }
   </style>
   <link rel="stylesheet" href="./css/index.css">
 </head>
+
+<body>
   <h1 class="title">数字图像处理</h1>
   <div class="container">
     <div class="nav">
-      <div class="item1 item">文件
+      <div class="item1 item">设置选项
         <ul>
-          <li class="ul-item">新建文件</li>
+          <li class="ul-item">
+            新建文件
+            <input type="file" name="newFile" id="myFile">
+          </li>
           <li class="ul-item">保存</li>
           <li class="ul-item">另存为</li>
           <li class="ul-item">设置</li>
           <li class="ul-item">退出</li>
         </ul>
       </div>
-      <div class="item2 item">图像处理</div>
+      <div class="item2 item">图像处理
+        <ul>
+          <li class="ul-item foo1">原图显示</li>
+          <li class="ul-item foo2">反色操作</li>
+          <li class="ul-item foo3">浅色滤镜</li>
+          <li class="ul-item foo4">图像平移</li>
+          <li class="ul-item foo5">图像缩放</li>
+          <li class="ul-item foo6">水平镜像</li>
+          <li class="ul-item foo7">垂直镜像</li>
+          <li class="ul-item foo8">图像旋转</li>
+        </ul>
+      </div>
       <div class="item3 item">图像特效</div>
-      <div class="item4 item">图像特xiao</div>
+      <div class="item4 item">图像配置</div>
     </div>
     <div class="main">
-      <div class="main-left">
-        <img src="" alt="" id="img1">
+
+        <div class="main-left">
+
       </div>
+      <div class="mainCenter"></div>
       <div class="main-right">
-        <img src="" alt="" id="img2">
+
+          <canvas id="myCanvas"></canvas>
+
       </div>
     </div>
   </div>
-<body>
 </body>
 <script src="./js/index.js"></script>
+
 </html>

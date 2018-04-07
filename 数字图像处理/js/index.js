@@ -1,77 +1,160 @@
-var item1 = document.querySelector('.item1');
+let item1 = document.querySelector('.item1');
+let item2 = document.querySelector('.item2');
+let myCanvas = document.getElementById('myCanvas');
+let myFile = document.getElementById('myFile');
+let context = myCanvas.getContext('2d');
+let foo1 = document.querySelector('.foo1');
+let foo2 = document.querySelector('.foo2');
+let foo3 = document.querySelector('.foo3');
+let foo4 = document.querySelector('.foo4');
+let foo5 = document.querySelector('.foo5');
+let foo6 = document.querySelector('.foo6');
+let foo7 = document.querySelector('.foo7');
+let foo8 = document.querySelector('.foo8');
 
-item1.addEventListener('click',function(event){
+item1.addEventListener('click', function (event) {
   let boxDisplay = item1.querySelector('ul').style.display;
-  if(boxDisplay === 'none'){
+  if (boxDisplay === 'none') {
     item1.querySelector('ul').style.display = 'block';
-    setTimeout(()=> {
+    setTimeout(() => {
       item1.querySelector('ul').style.opacity = 1;
     });
-  }else {
+  } else {
     item1.querySelector('ul').style.display = 'none';
-    setTimeout(()=> {
-      item1.querySelector('ul').style.opacity = 0;
-    });
   }
-},false)
-item1.addEventListener('mouseleave',function(event){
+}, false)
+item1.addEventListener('mouseleave', function (event) {
   item1.querySelector('ul').style.display = 'none';
-},false);
+}, false);
 
 
-小杜有一个小写字母组成的字符串s，字符串s已经被写在墙上，小杜还有很多卡片，每个卡片
-有一个小写字母，组成一个字符串t，小杜可以选择字符串t中人任意一个字符，然后覆盖在字符串s的一个
-字符上，小杜想知道在选取一些卡片覆盖s的一些字符之后，可以得到的字典序最大的字符串是什么
+item2.addEventListener('click', function (event) {
+  let ul2 = item2.querySelector('ul');
+  let boxDisplay = ul2.style.display;
+  if (boxDisplay === 'none') {
+    ul2.style.display = 'block';
+    setTimeout(() => {
+      ul2.style.opacity = 1;
+    });
+  } else {
+    ul2.style.display = 'none';
+  }
+}, false)
+item2.addEventListener('mouseleave', function (event) {
+  let ul2 = item2.querySelector('ul');
+  ul2.style.display = 'none';
+}, false);
 
+//监视myFile的onchange事件，并构造FileReader：
+myFile.onchange = function (event) {
+  let selectedFile = event.target.files[0];
+  let reader = new FileReader();
+  reader.onload = putImage2Canvas;
+  reader.readAsDataURL(selectedFile);
 
-输入描述：
-输入包括俩行，第一行一个字符串s，字符串s长度length(1 <= length <= 50)
-，s中的每个字符都是小写字母
-第二行一个字符串t，字符串t长度length（1 <= length <= 50），t中每个字符都是小写
-字母
-
-输出描述：
-输出一个字符串，既可以得到的字典序最大字符串
-
-示例：
-输入：
-fedcba
-ee
-
-输出：feeeba
-
-import java.util.Arrays;
-import java.util.Scanner;
-
-public class Main {
-
-    public static void main(String[] args){
-        Scanner scanner = new Scanner(System.in);
-        String tempS = scanner.nextLine()
-                ,tempT = scanner.nextLine();
-        char[] s = tempS.toCharArray(),
-                t = tempT.toCharArray();
-        Arrays.sort(t);
-        for(int i = t.length-1, j = 0; i>=0; i--){
-            while(j + 1 < s.length && s[j] >= t[i]){
-                j ++;
-            }
-//            System.out.println(i+" "+j);
-            if(s[j] < t[i])s[j] = t[i];
-        }
-        for(char i : s){
-            System.out.print(i);
-        }
-        System.out.println();
-    }
 }
+//编写putImage2Canvas函数，这个函数用来将FileReader读取的数据放入canvas中供 JavaScript 处理
+function putImage2Canvas(event) {
+  img = new Image();
+  imgOrigin = new Image();
+  img.src = event.target.result;
 
-if (data['day'] === 0){
-  span[0].style.display = 'none';
-} else if (data['hour'] === 0){
-  span[1].style.display = 'none';
-} else if (data['min'] === 0) {
-  span[2].style.display = 'none';
-} else if (data['second'] === 0) {
-  span[3].style.display = 'none';
+  let img1 = document.createElement('img');
+  img1.src = event.target.result;
+  let mainLeft = document.querySelector('.main-left');
+  mainLeft.appendChild(img1);
+  
+  imgOrigin.src = event.target.result;
+  img.onload = function () {
+    myCanvas.width = img.width;
+    myCanvas.height = img.height;
+    let context = myCanvas.getContext('2d');
+    context.drawImage(img, 0, 0);
+    let imgdata = context.getImageData(0, 0, img.width, img.height);
+    // 处理imgdata
+  }
 }
+//进行图像反色操作
+function reverseImage() {
+  let imgdata = context.getImageData(0, 0, myCanvas.width, myCanvas.height);
+  for (let i = 0, len = imgdata.data.length; i < len; i += 4) {
+    imgdata.data[i] = 255 - imgdata.data[i];
+    imgdata.data[i + 1] = 255 - imgdata.data[i + 1];
+    imgdata.data[i + 2] = 255 - imgdata.data[i + 2];
+  }
+  context.putImageData(imgdata, 0, 0);
+}
+//图像加一层浅色的滤镜
+let sepiaFilter = function(imgData) {
+  let d = imgData.data
+  for (let i = 0; i < d.length; i += 4) {
+    let r = d[i]
+    let g = d[i + 1]
+    let b = d[i + 2]
+    d[i] = (r * 0.393) + (g * 0.769) + (b * 0.189) // red
+    d[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168) // green
+    d[i + 2] = (r * 0.272) + (g * 0.534) + (b * 0.131) // blue
+  }
+  return imgData
+}
+function sepiaFilterImage(){
+  let imgdata = context.getImageData(0, 0, myCanvas.width, myCanvas.height);
+  let imgdata2 = sepiaFilter(imgdata);
+  context.putImageData(imgdata, 0, 0);
+
+}
+//保存图片url
+let imgsrc = myCanvas.toDataURL('image/jpeg', 1);
+
+//图像平移
+function translateImage() {
+  context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  context.translate(100, 100);
+  context.drawImage(img, 0, 0);
+}
+//图像缩放
+function scaleImage() {
+  context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  context.translate(myCanvas.width / 2, myCanvas.height / 2);
+  context.scale(.5, .5);
+  context.translate(-myCanvas.width / 2, -myCanvas.height / 2);
+  context.drawImage(img, 0, 0);
+}
+//镜像变换水平
+function glassX() {
+  context.translate(myCanvas.width / 2, myCanvas.height / 2);
+  context.scale(-1, 1);
+  context.translate(-myCanvas.width / 2, -myCanvas.height / 2);
+  context.drawImage(img, 0, 0);
+}
+//镜像变换垂直
+function glassY() {
+  context.translate(myCanvas.width / 2, myCanvas.height / 2);
+  context.scale(1, -1);
+  context.translate(-myCanvas.width / 2, -myCanvas.height / 2);
+  context.drawImage(img, 0, 0);
+}
+//图像旋转
+function rotateImage() {
+  context.translate(myCanvas.width / 2, myCanvas.height / 2);
+  context.rotate(270 * Math.PI / 180);
+  context.translate(-myCanvas.width / 2, -myCanvas.height / 2);
+  context.drawImage(img, 0, 0);
+}
+//原图显示
+function orignImage(){
+  context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+  myCanvas.width = imgOrigin.width;
+  myCanvas.height = imgOrigin.height;
+  let context2 = myCanvas.getContext('2d');
+  context2.drawImage(imgOrigin, 0, 0);
+}
+foo1.onclick = orignImage;
+foo2.onclick = reverseImage;
+foo3.onclick = sepiaFilterImage;
+foo4.onclick = translateImage;
+foo5.onclick = scaleImage;
+foo6.onclick = glassX;
+foo7.onclick = glassY;
+foo8.onclick = rotateImage;
+
